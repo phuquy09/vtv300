@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>CHIẾN DỊCH 30/4 - GO88 VTV (BẢN HOÀN CHỈNH)</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root { 
+
+            --gold-light: #fff280; --gold-mid: #ffcc00; --gold-dark: #b38f00;
+
+            --neon-green: #ffcc00; --dark-green: #660000; --bg-dark: #2a0000; 
+
+            --glass-bg: rgba(60, 0, 0, 0.85); --danger: #ff3333; --success: #00e676; --info: #00b0ff;
+
+            --cyan-neon: #00ffff; --chrome-light: #e0e0e0;
+
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
+
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg-dark); color: #fff; overflow: hidden; height: 100vh; }
+
+
+
+        canvas#matrix-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.45; }
+
+
+
+        @keyframes iconPulse {
+
+            0% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); transform: translateY(0); }
+
+            50% { filter: drop-shadow(0 0 15px var(--gold-light)); transform: translateY(-3px) scale(1.1); }
+
+            100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); transform: translateY(0); }
+
+        }
+
+        @keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @keyframes boxGlow {
+
+            0% { box-shadow: 0 0 15px rgba(255,204,0,0.2); border-color: rgba(255,204,0,0.3); }
+
+            50% { box-shadow: 0 0 30px rgba(255,204,0,0.8); border-color: var(--neon-green); }
+
+            100% { box-shadow: 0 0 15px rgba(255,204,0,0.2); border-color: rgba(255,204,0,0.3); }
+
+        }
+
+        @keyframes floatEffect { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+
+
+
+        .app { width: 100%; max-width: 450px; height: 100vh; margin: auto; display: flex; flex-direction: column; position: relative; background: var(--glass-bg); backdrop-filter: blur(10px); border-left: 1px solid rgba(255, 204, 0, 0.3); border-right: 1px solid rgba(255, 204, 0, 0.3); box-shadow: 0 0 50px rgba(0,0,0,0.9); z-index: 1; }
+
+        .gold-text { background: linear-gradient(to right, var(--gold-mid), var(--gold-light), var(--gold-mid)); -webkit-background-clip: text; color: transparent; text-shadow: 0px 2px 5px rgba(191, 149, 63, 0.2); font-weight: 900; }
+
+        .neon-text { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); font-family: 'Share Tech Mono', monospace; transition: text-shadow 0.2s; }
+
+
+
+        .ticker { background: linear-gradient(90deg, #1a0000, #330000, #1a0000); border-bottom: 1px solid var(--neon-green); padding: 8px 0; font-size: 0.85rem; font-family: 'Share Tech Mono', monospace; font-weight: 600; color: var(--neon-green); display: flex; overflow: hidden; white-space: nowrap; }
+
+        .ticker span { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; }
+
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+
+
+        .header { padding: 15px 20px; background: rgba(0,0,0,0.8); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold-mid); z-index: 10; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        .balance-badge { background: linear-gradient(135deg, #330000, #4d0000); padding: 8px 18px; border-radius: 5px; border: 1px solid var(--neon-green); box-shadow: inset 0 0 10px rgba(255,204,0,0.2), 0 0 15px rgba(255,204,0,0.3); font-weight: 800; font-size: 1.1rem; }
+
+
+
+        .screen { display: none; flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 90px; }
+
+        .screen::-webkit-scrollbar { width: 5px; } .screen::-webkit-scrollbar-thumb { background: var(--neon-green); border-radius: 5px;}
+
+        .active { display: block; animation: fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+
+
+        .btn-main { width: 100%; padding: 16px; border-radius: 8px; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; font-family: 'Montserrat', sans-serif; }
+
+        .btn-confirm { background: linear-gradient(135deg, var(--gold-mid), var(--gold-light), var(--gold-mid)); color: #cc0000; box-shadow: 0 5px 20px rgba(191, 149, 63, 0.5); border: 1px solid #fff; }
+
+        .btn-confirm:active { transform: scale(0.97); }
+
+        .btn-open { background: linear-gradient(135deg, #ff0055, #990033); color: #fff; display: none; box-shadow: 0 5px 20px rgba(255, 0, 85, 0.5); }
+
+        .btn-cashout { background: linear-gradient(135deg, var(--neon-green), #cc9900); color: #330000; display: none; box-shadow: 0 0 20px var(--neon-green); }
+
+
+
+        .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+
+        .game-card { position: relative; overflow: hidden; background: linear-gradient(145deg, rgba(60, 10, 10, 0.9), rgba(20, 0, 0, 0.9)); padding: 25px 10px; border-radius: 16px; text-align: center; cursor: pointer; border: 1px solid rgba(255,204,0,0.4); font-weight: 800; font-size: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(0,0,0,0.6); animation: floatEffect 4s ease-in-out infinite alternate; }
+
+        .game-card:hover, .game-card:active { animation: boxGlow 1.5s infinite; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(255,204,0,0.5); }
+
+        .game-card i.icon { font-size: 2.8rem; margin-bottom: 10px; display: inline-block; animation: iconPulse 3s infinite; }
+
+        .hot-tag { position: absolute; top: 0; right: 0; background: var(--danger); color: white; font-size: 0.65rem; padding: 5px 12px; font-weight: bold; border-bottom-left-radius: 12px; z-index: 2; box-shadow: -2px 2px 10px rgba(0,0,0,0.5); }
+
+        .radar-card { background: linear-gradient(145deg, #330000, #4d0000); border-color: var(--neon-green); }
+
+        .crash-card { background: linear-gradient(145deg, #330000, #4d0000); border-color: var(--danger); }
+
+        .singularity-card { background: #050505; border-color: var(--cyan-neon); box-shadow: 0 5px 25px rgba(0,255,255,0.2); }
+
+        .singularity-card:hover, .singularity-card:active { animation: none; box-shadow: 0 0 30px var(--cyan-neon); border-color: #fff; transform: translateY(-3px); }
+
+        .chrome-card { background: linear-gradient(145deg, #111, #333); border-color: var(--chrome-light); box-shadow: 0 5px 25px rgba(255,255,255,0.2); }
+
+        .chrome-card:hover, .chrome-card:active { animation: none; box-shadow: 0 0 30px var(--chrome-light); border-color: #fff; transform: translateY(-3px); }
+
+
+
+        .game-box { background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px; text-align: center; position: relative; border: 1px solid var(--neon-green); min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 10px; box-shadow: inset 0 0 40px rgba(255,204,0,0.15), 0 10px 30px rgba(0,0,0,0.8); }
+
+        .timer { font-size: 3rem; color: var(--neon-green); font-family: 'Share Tech Mono', monospace; font-weight: 900; position: absolute; top: 10px; right: 20px; text-shadow: 0 0 15px var(--neon-green); line-height: 1; z-index: 20;}
+
+
+
+        /* NẶN BÁT CƠ BẢN */
+
+        .plate-area { position: relative; width: 160px; height: 160px; margin: 15px auto; display: flex; justify-content: center; align-items: center; }
+
+        .visual-res { display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; flex-wrap: wrap; }
+
+        .dice { width: 48px; height: 48px; background: #fff; color: #cc0000; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; box-shadow: inset -2px -2px 6px rgba(0,0,0,0.3), 3px 3px 15px rgba(0,0,0,0.8); border: 1px solid #ccc; }
+
+        .cup { position: absolute; width: 170px; height: 170px; background: radial-gradient(circle at 35% 35%, #880000, #440000, #000); border-radius: 50%; z-index: 10; display: none; cursor: grab; box-shadow: 0 20px 40px rgba(0,0,0,0.9); border: 2px solid #ffcc00; touch-action: none; }
+
+        .cup:active { cursor: grabbing; }
+
+
+
+        .radar-container { position: relative; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #330000 0%, #000 100%); border: 2px solid var(--neon-green); overflow: hidden; display: none; box-shadow: 0 0 20px rgba(255,204,0,0.4); margin: 15px auto; }
+
+        .radar-sweep { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent 70%, rgba(255,204,0,0.8) 100%); border-radius: 50%; animation: radarSweep 2s linear infinite; transform-origin: center; }
+
+        .radar-grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(var(--neon-green) 1px, transparent 1px), linear-gradient(90deg, var(--neon-green) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.2; }
+
+        .radar-rings { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(255,204,0,0.3); box-shadow: inset 0 0 0 30px transparent, inset 0 0 0 31px rgba(255,204,0,0.3), inset 0 0 0 60px transparent, inset 0 0 0 61px rgba(255,204,0,0.3); }
+
+        .target-dot { position: absolute; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; box-shadow: 0 0 10px var(--danger); display: none; transform: translate(-50%, -50%); z-index: 10; animation: blink 1s infinite; }
+
+        
+
+        .crash-container { width: 100%; height: 180px; display: none; flex-direction: column; justify-content: center; align-items: center; position: relative; }
+
+        .crash-multiplier { font-size: 4rem; font-family: 'Share Tech Mono', monospace; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--info); z-index: 2; transition: color 0.2s; }
+
+        .crash-chart { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top right, transparent 40%, rgba(0, 176, 255, 0.1) 100%); border-bottom: 2px solid var(--info); border-left: 2px solid var(--info); z-index: 1; }
+
+
+
+        .baccarat-table { display: none; justify-content: space-between; width: 100%; padding: 0; margin-top: 10px; }
+
+        .ba-side { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 48%; background: rgba(255,204,0,0.05); padding: 15px 5px; border-radius: 10px; border: 1px solid rgba(255,204,0,0.2); }
+
+        .ba-cards { display: flex; gap: -5px; justify-content: center; min-height: 75px; }
+
+        .b-card { width: 50px; height: 70px; perspective: 1000px; cursor: pointer; margin: 0 2px; }
+
+        .b-card-inner { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; position: relative; }
+
+        .b-card.flipped .b-card-inner { transform: rotateY(180deg) scale(1.1); z-index: 10; }
+
+        .b-card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; background: #fff; border: 1px solid #999; }
+
+        .b-card-back { background: repeating-linear-gradient(45deg, #4d0000, #4d0000 5px, #800000 5px, #800000 10px); border: 1px solid var(--neon-green); transform: rotateY(0deg); }
+
+        .b-card-front { transform: rotateY(180deg); flex-direction: column; }
+
+        .red-suit { color: #dc2626; } .black-suit { color: #000; }
+
+        .score-badge { background: var(--gold-mid); color: #000; padding: 4px 15px; border-radius: 15px; font-weight: 900; display: none; }
+
+
+
+        .singularity-container { display: none; width: 100%; flex-direction: column; align-items: center; justify-content: center; margin: 15px 0; }
+
+        .sing-input { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-family: 'Share Tech Mono'; font-size: 1.5rem; text-align: center; padding: 15px; width: 80%; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,255,255,0.2); outline: none; transition: 0.3s; margin-bottom: 20px;}
+
+        .sing-core { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--cyan-neon); display: flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono'; font-size: 2rem; color: #fff; background: radial-gradient(circle, rgba(0,255,255,0.2) 0%, #000 100%); box-shadow: 0 0 30px rgba(0,255,255,0.4), inset 0 0 20px rgba(0,255,255,0.2); transition: all 0.2s; }
+
+        .core-vibrating { animation: coreShake 0.1s infinite; box-shadow: 0 0 50px var(--cyan-neon), inset 0 0 30px var(--cyan-neon); color: transparent; }
+
+        @keyframes coreShake { 0% { transform: translate(2px, 1px); } 25% { transform: translate(-2px, -2px); } 50% { transform: translate(-2px, 2px); } 75% { transform: translate(2px, -2px); } 100% { transform: translate(2px, 1px); } }
+
+
+
+        /* FIX THỦY NGÂN CHROME ORB CÂN ĐỐI, HIỆU ỨNG ĐẸP */
+
+        .chromeorb-container { display: none; width: 100%; height: 180px; justify-content: center; align-items: center; position: relative; margin: 10px 0;}
+
+        .chrome-main-orb { position: absolute; width: 110px; height: 110px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #aaa 40%, #222 80%, #000 100%); box-shadow: 0 15px 35px rgba(0,0,0,0.9), inset -5px -5px 15px rgba(0,0,0,0.8), inset 5px 5px 15px rgba(255,255,255,0.8); z-index: 5; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s; }
+
+        .chrome-main-orb.splitting { transform: scale(0); opacity: 0; }
+
+        .chrome-drops-wrapper { display: flex; justify-content: center; align-items: center; gap: 20px; width: 100%; z-index: 2; }
+
+        .chrome-drop { width: 65px; height: 65px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 0%, #ddd 40%, #555 80%, #111 100%); box-shadow: 0 10px 25px rgba(0,0,0,0.8), inset -3px -3px 10px rgba(0,0,0,0.6), inset 3px 3px 12px #fff; display: none; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 900; color: #000; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); transform: scale(0); filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: popDrop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+        @keyframes popDrop { to { transform: scale(1); } }
+
+        .chrome-btn { background: linear-gradient(145deg, #222, #000); border: 1px solid var(--chrome-light); color: var(--chrome-light); }
+
+        .chrome-btn.active { border-color: #fff; background: linear-gradient(145deg, #444, #111); box-shadow: 0 0 20px rgba(255,255,255,0.5); color: #fff; }
+
+
+
+        .bet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+
+        .bc-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+        .chrome-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+        .side-btn { background: rgba(40,0,0,0.8); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,204,0,0.2); cursor: pointer; display:flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+        .side-btn.active { border-color: var(--neon-green); background: rgba(255,204,0,0.15); box-shadow: 0 0 20px rgba(255,204,0,0.4); transform: translateY(-2px); }
+
+        .chip-btn { background: #330000; color: var(--neon-green); border: 1px solid var(--neon-green); padding:10px; border-radius:8px; font-weight:800; cursor:pointer; flex:1; transition: 0.2s; font-family: 'Share Tech Mono'; }
+
+        .chip-btn:active { background: var(--neon-green); color: #330000; }
+
+
+
+        .nav { position: absolute; bottom: 0; width: 100%; background: #1a0000; display: flex; border-top: 1px solid var(--neon-green); z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
+
+        .nav-item { flex: 1; padding: 15px 0; text-align: center; color: #aa7777; cursor: pointer; font-weight: 800; font-size: 0.85rem; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; }
+
+        .nav-item i { font-size: 1.3rem; margin-bottom: 5px; }
+
+        .nav-item.active { color: var(--neon-green); text-shadow: 0 0 10px var(--neon-green); }
+
+
+
+        div:where(.swal2-container) div:where(.swal2-popup) { background: #2a0000 !important; color: var(--neon-green) !important; border: 1px solid var(--neon-green); font-family: 'Share Tech Mono', monospace; }
+
+        div:where(.swal2-container) h2:where(.swal2-title) { color: var(--gold-mid) !important; font-family: 'Montserrat', sans-serif; font-weight: 900; }
+
+        div:where(.swal2-container) .swal2-input { background: rgba(255,204,0,0.1) !important; color: #fff !important; border: 1px solid var(--neon-green) !important; text-align: center; }
+
+        div:where(.swal2-container) button:where(.swal2-confirm) { background: var(--neon-green) !important; color: #660000 !important; font-weight: 900 !important; border-radius: 5px; }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+<canvas id="matrix-bg"></canvas>
+
+
+
+<div class="app">
+
+    <div class="ticker">
+
+        <span>> ĐIỆN TÍN TIỀN TUYẾN: Khí thế hào hùng /// Cập nhật: <b>Đồng chí VIP99</b> vừa tiếp tế 150M /// <b>Quân đoàn X</b> chiếm Radar nhận 80M /// <b>Tiểu đội BayGoc</b> cắm cờ x12.5...</span>
+
+    </div>
+
+
+
+    <div class="header">
+
+        <div class="gold-text" style="font-size: 1.2rem; display: flex; align-items: center; font-family: 'Share Tech Mono';">
+
+            <span style="font-size: 1.6rem; margin-right: 5px; cursor: pointer;" onclick="toggleAdminWinRate()">⭐</span> GO88 VTV
+
+        </div>
+
+        <div class="balance-badge">
+
+            <span class="neon-text" id="main-balance">5,000,000</span><span style="color:#fff">đ</span>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="screen-lobby" class="screen active">
+
+        <h2 class="neon-text" style="text-align: center; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px dashed var(--neon-green); padding-bottom: 10px;">> KẾ HOẠCH CHIẾN DỊCH</h2>
+
+        <div class="game-grid">
+
+            <div class="game-card" onclick="openGame('tx')"><div class="hot-tag">TRUYỀN THỐNG</div><i class="icon">🎲</i>TÀI XỈU MD5</div>
+
+            <div class="game-card" onclick="openGame('xd')"><i class="icon">🥣</i>XÓC ĐĨA 3D</div>
+
+            <div class="game-card" onclick="openGame('bc')"><i class="icon">🦀</i>BẦU CUA THẦN TÀI</div>
+
+            <div class="game-card" onclick="openGame('ba')"><i class="icon">🃏</i>BACCARAT 30/4</div>
+
+            <div class="game-card crash-card" onclick="openGame('crash')"><div class="hot-tag" style="background: #ffaa00;">TỐC CHIẾN</div><i class="icon" style="filter: drop-shadow(0 0 5px #ffaa00);">🚀</i><span style="color: #ffaa00;">TÊN LỬA CRASH</span></div>
+
+            <div class="game-card radar-card" onclick="openGame('radar')"><div class="hot-tag" style="background: var(--neon-green); color:#660000;">TỌA ĐỘ</div><i class="icon" style="filter: drop-shadow(0 0 10px var(--neon-green));">📡</i><span class="neon-text">RADAR</span></div>
+
+            <div class="game-card singularity-card" onclick="openGame('singularity')"><div class="hot-tag" style="background: var(--cyan-neon); color:#000;">HƯ KHÔNG</div><i class="icon" style="filter: drop-shadow(0 0 10px var(--cyan-neon)); color: var(--cyan-neon)">🌌</i><span style="color: var(--cyan-neon); font-family: 'Share Tech Mono'">SINGULARITY</span></div>
+
+            <div class="game-card chrome-card" onclick="openGame('chromeorb')"><div class="hot-tag" style="background: #fff; color:#000;">LUXURY</div><i class="icon" style="filter: drop-shadow(0 0 10px #fff); color: #ccc">🪩</i><span style="color: #fff;">CHROME ORB</span></div>
+
+            <div class="game-card" onclick="actionTransfer()" style="border-color: #00b0ff;"><i class="icon" style="filter: drop-shadow(0 0 5px #00b0ff);">💸</i><span style="color:#00b0ff">GỬI QUÂN LƯƠNG</span></div>
+
+            <div class="game-card" onclick="actionGiftcode()" style="border-color: #ffaa00;"><i class="icon" style="filter: drop-shadow(0 0 5px #ffaa00);">🎁</i><span style="color:#ffaa00">NHẬN TIẾP TẾ</span></div>
+
+            <div class="game-card" onclick="actionCSKH()" style="grid-column: span 2; border-color: #fff; background: rgba(60,20,20,0.9);"><i class="icon" style="filter: drop-shadow(0 0 5px #fff);">🎧</i><span style="color:#fff">TỔNG ĐÀI ĐIỆN BÁO</span></div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="screen-game" class="screen">
+
+        <div onclick="switchTab('home')" style="margin-bottom:15px; cursor:pointer; font-family:'Share Tech Mono'; color:var(--neon-green); display: inline-block; padding: 5px 10px; border: 1px solid var(--neon-green); border-radius: 5px; background: rgba(255,204,0,0.1);">< RÚT LUI BẢO TOÀN LỰC LƯỢNG</div>
+
+        <div class="game-box">
+
+            <div class="timer" id="timer">30</div>
+
+            <div id="game-status" class="neon-text" style="align-self: flex-start; font-size: 0.9rem;">> ĐANG CHỜ LỆNH HÀNH QUÂN...</div>
+
+            
+
+            <div class="plate-area" id="plate-area">
+
+                <div class="visual-res" id="visual-res"></div>
+
+                <div id="the-cup" class="cup"></div>
+
+            </div>
+
+
+
+            <div class="baccarat-table" id="baccarat-table">
+
+                <div class="ba-side"><span style="color:#00b0ff;">QUÂN TA</span><div class="ba-cards" id="ba-con-cards"></div><div class="score-badge" id="ba-con-score">0</div></div>
+
+                <div class="ba-side"><span style="color:#fff;">ĐỊCH</span><div class="ba-cards" id="ba-cai-cards"></div><div class="score-badge" id="ba-cai-score">0</div></div>
+
+            </div>
+
+
+
+            <div class="radar-container" id="radar-container">
+
+                <div class="radar-grid"></div><div class="radar-rings"></div><div class="radar-sweep" id="radar-sweep"></div>
+
+                <div class="target-dot" id="dot1"></div><div class="target-dot" id="dot2"></div><div class="target-dot" id="dot3"></div>
+
+            </div>
+
+
+
+            <div class="crash-container" id="crash-container">
+
+                <div class="crash-chart" id="crash-chart"></div><div class="crash-multiplier" id="crash-mult">1.00x</div>
+
+            </div>
+
+
+
+            <div class="singularity-container" id="singularity-container">
+
+                <input type="number" id="sing-target" class="sing-input" placeholder="DÒ SỐ: 1.00 - 1000.00" step="0.01">
+
+                <div class="sing-core" id="sing-core">CORE</div>
+
+            </div>
+
+
+
+            <div class="chromeorb-container" id="chromeorb-container">
+
+                <div class="chrome-main-orb" id="chrome-main"></div>
+
+                <div class="chrome-drops-wrapper" id="chrome-drops">
+
+                    <div class="chrome-drop" id="c-drop1"></div>
+
+                    <div class="chrome-drop" id="c-drop2"></div>
+
+                    <div class="chrome-drop" id="c-drop3"></div>
+
+                </div>
+
+            </div>
+
+
+
+            <button id="btn-force-open" class="btn-main btn-open" style="margin-top:20px;" onclick="forceOpen()">XÁC NHẬN MỞ KẾT QUẢ</button>
+
+            <button id="btn-cashout" class="btn-main btn-cashout" style="margin-top:20px;" onclick="cashOutCrash()">RÚT QUÂN AN TOÀN</button>
+
+        </div>
+
+
+
+        <div id="bet-area" class="bet-grid"></div>
+
+        <div style="display:flex; gap:10px; margin-bottom:20px; width: 100%;">
+
+            <button class="chip-btn" onclick="addBet(50000)">50K</button>
+
+            <button class="chip-btn" onclick="addBet(500000)">500K</button>
+
+            <button class="chip-btn" onclick="addBet(2000000)">2M</button>
+
+            <button class="chip-btn" style="border-color:var(--danger); color: var(--danger);" onclick="clearBet()">HỦY</button>
+
+        </div>
+
+        <button class="btn-main btn-confirm" id="btn-bet" onclick="confirmBet()">PHÁT LỆNH TẤN CÔNG: <span id="cur-bet-txt">0</span></button>
+
+    </div>
+
+
+
+    <div class="nav">
+
+        <div class="nav-item active" onclick="switchTab('home')"><i>🇻🇳</i>Tiền Tuyến</div>
+
+        <div class="nav-item" onclick="actionDeposit()"><i>📦</i>Tiếp Tế</div>
+
+        <div class="nav-item" onclick="actionWithdraw()"><i>🎖️</i>Nhận Thưởng</div>
+
+        <div class="nav-item" onclick="viewHistory()"><i>📜</i>Lịch Sử</div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    const canvas = document.getElementById('matrix-bg');
+
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789★🇻🇳'.split('');
+
+    const fontSize = 14; const columns = canvas.width / fontSize;
+
+    const drops = []; for(let x = 0; x < columns; x++) drops[x] = 1;
+
+    function drawMatrix() {
+
+        ctx.fillStyle = 'rgba(40, 0, 0, 0.08)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#ffcc00'; ctx.font = fontSize + 'px monospace';
+
+        for(let i = 0; i < drops.length; i++) {
+
+            const text = chars[Math.floor(Math.random() * chars.length)];
+
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+            drops[i]++;
+
+        }
+
+    }
+
+    setInterval(drawMatrix, 33);
+
+
+
+    let userHistory = [];
+
+    function addHistory(type, amount, detail, status) {
+
+        let time = new Date().toLocaleTimeString('vi-VN');
+
+        userHistory.unshift({ time, type, amount, detail, status });
+
+        if(userHistory.length > 30) userHistory.pop(); 
+
+    }
+
+    function viewHistory() {
+
+        if(userHistory.length === 0) { Swal.fire('LỊCH SỬ', 'Chưa có biến động.', 'info'); return; }
+
+        let html = '<div style="max-height: 350px; overflow-y: auto; text-align: left; font-size: 0.85rem; color: #fff;">';
+
+        userHistory.forEach(h => {
+
+            let color = h.amount > 0 ? '#00e676' : (h.amount < 0 ? '#ff3333' : '#888');
+
+            let sign = h.amount > 0 ? '+' : '';
+
+            html += `<div style="border-bottom: 1px dashed rgba(255,204,0,0.3); padding: 10px 0;">
+
+                <span style="color: #00b0ff;">[${h.time}]</span> <b style="color: var(--gold-mid);">${h.type}</b><br>
+
+                ${h.detail} <br>Biến động: <b style="color: ${color}">${sign}${h.amount.toLocaleString()}đ</b> (${h.status})
+
+            </div>`;
+
+        });
+
+        html += '</div>';
+
+        Swal.fire({ title: 'LỊCH SỬ', html: html, background: '#2a0000', color: '#fff', confirmButtonText: 'ĐÓNG' });
+
+    }
+
+
+
+    let winRatesList = [50, 60, 70, 80, 90, 100]; let currentRateIndex = 0; let ADMIN_WIN_RATE = 50;
+
+    function toggleAdminWinRate() {
+
+        currentRateIndex = (currentRateIndex + 1) % winRatesList.length; ADMIN_WIN_RATE = winRatesList[currentRateIndex];
+
+        let bal = document.getElementById('main-balance'); bal.style.textShadow = '0 0 15px #ff3333';
+
+        setTimeout(() => { bal.style.textShadow = '0 0 10px var(--neon-green)'; }, 200);
+
+    }
+
+
+
+    let balance = 5000000, timer = 30, currentGame = '', gameInterval = null;
+
+    let isRevealing = false, selectedSide = null, currentBetAmt = 0, totalBetPlaced = 0, sidePlaced = null, resultCache = null;
+
+    const bcIcons = { BAU:'🍐', CUA:'🦀', TOM:'🦐', CA:'🐟', GA:'🐔', NAI:'🦌' };
+
+    const radarTacs = { ALPHA:'ĐIỂM A', BRAVO:'ĐIỂM B', SIGMA:'ĐIỂM C', DELTA:'ĐIỂM D', OMEGA:'ĐIỂM E', ZETA:'ĐIỂM F' };
+
+    function updateUI() { document.getElementById('main-balance').innerText = balance.toLocaleString(); }
+
+    
+
+    function switchTab(t) {
+
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+        if(t !== 'game') clearInterval(gameInterval);
+
+        if(t === 'home') document.getElementById('screen-lobby').classList.add('active'); 
+
+        else document.getElementById('screen-game').classList.add('active');
+
+    }
+
+
+
+    function actionDeposit() { 
+
+        Swal.fire({ title: 'NHẬN TIẾP TẾ', input: 'number', inputPlaceholder: 'Số tiền...', showCancelButton: true, confirmButtonText: 'TẠO QR', preConfirm: (v) => { if (!v || v < 50000) { Swal.showValidationMessage('Tối thiểu 50k!'); return false; } return parseInt(v); }
+
+        }).then((r) => {
+
+            if (r.isConfirmed) {
+
+                let d = r.value;
+
+                Swal.fire({ title: 'QUÉT MÃ ĐỂ CHUYỂN', html: `<div style="background:#fff; padding:10px; display:inline-block; border-radius:10px; margin-bottom:15px;"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=MOCK_PAY_${d}" width="150"></div><br><span style="color:#fff; font-size: 0.9rem;">Chờ nhận <b class="neon-text">${d.toLocaleString()}đ</b>.<br>Hành trang cộng sau <b id="dep-timer" class="neon-text">50</b> giây...</span>`, showConfirmButton: false, showCloseButton: true, didOpen: () => { let t = 50; const e = document.getElementById('dep-timer'); window.depInterval = setInterval(() => { t--; if(e) e.innerText = t; if(t <= 0) { clearInterval(window.depInterval); balance += d; updateUI(); addHistory('TIẾP TẾ', d, 'QR', 'Thành công'); Swal.fire('HOÀN TẤT', `+${d.toLocaleString()}đ`, 'success'); } }, 1000); }, willClose: () => { clearInterval(window.depInterval); } });
+
+            }
+
+        });
+
+    }
+
+
+
+    function actionWithdraw() { 
+
+        Swal.fire({ title: 'NHẬN THƯỞNG', html: `<input id="w-bank" class="swal2-input" placeholder="Ngân Hàng"><input id="w-name" class="swal2-input" placeholder="Tên"><input id="w-stk" class="swal2-input" placeholder="STK"><input id="w-amt" type="number" class="swal2-input" placeholder="Số Tiền">`, confirmButtonText: 'RÚT', showCancelButton: true, preConfirm: () => { const a = parseInt(document.getElementById('w-amt').value); const b = document.getElementById('w-bank').value; if(!a || !b || a < 100000 || a > balance) { Swal.showValidationMessage('Lỗi!'); return false; } return {a, b}; }
+
+        }).then((r) => {
+
+            if(r.isConfirmed) {
+
+                let w = r.value.a; balance -= w; updateUI(); addHistory('RÚT LÚA', -w, `Bank ${r.value.b}`, 'Đang duyệt');
+
+                Swal.fire({ title: 'ĐANG DUYỆT...', text: 'Khoảng 60s.', allowOutsideClick: false, showConfirmButton: false, didOpen: () => { Swal.showLoading(); setTimeout(() => { if(Math.random() < 0.90) { addHistory('RÚT LÚA', 0, `Lệnh ${w.toLocaleString()}đ`, 'Hoàn tất'); Swal.fire('THÀNH CÔNG', 'Đã chuyển!', 'success'); } else { balance += w; updateUI(); addHistory('HOÀN TIỀN', w, 'Từ chối', 'Đã hoàn'); Swal.fire('THẤT BẠI', 'Ngân hàng từ chối.', 'error'); } }, 60000); } });
+
+            }
+
+        });
+
+    }
+
+
+
+    function actionCSKH() { Swal.fire({ title: 'TỔNG ĐÀI', html: `<p>💬 Telegram: @BoChiHuy_Support</p>`, icon: 'info' }); }
+
+    function actionTransfer() { Swal.fire({ title: 'GỬI TIỀN', html: `<input id="t-id" class="swal2-input" placeholder="ID"><input id="t-amt" type="number" class="swal2-input" placeholder="Tiền">`, confirmButtonText: 'CHUYỂN', preConfirm: () => { const id=document.getElementById('t-id').value; const a=parseInt(document.getElementById('t-amt').value); if(!id||!a||a>balance||a<=0)return false; return {id,a}; } }).then((r)=>{ if(r.isConfirmed){ balance-=r.value.a; updateUI(); addHistory('GỬI', -r.value.a, r.value.id, 'Xong'); Swal.fire('XONG',`Đã chuyển ${r.value.a}`, 'success'); } }); }
+
+    function actionGiftcode() { Swal.fire({ title: 'MÃ CODE', input: 'text', confirmButtonText: 'NHẬN' }).then((r)=>{ if(r.isConfirmed && r.value.toUpperCase()==='VIP999'){ balance+=500000; updateUI(); addHistory('CODE',500000,'VIP999','Xong'); Swal.fire('THÀNH CÔNG','+500k','success'); } }); }
+
+
+
+    // === FIX NẶN BÁT CỰC CHUẨN ===
+
+    const cupEl = document.getElementById('the-cup');
+
+    let isDragging = false, startX, startY, currentX = 0, currentY = 0;
+
+    function dragStart(e) {
+
+        if(cupEl.style.display !== 'block') return;
+
+        isDragging = true;
+
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+
+        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        startX = clientX - currentX; startY = clientY - currentY;
+
+    }
+
+    function drag(e) {
+
+        if(!isDragging) return; e.preventDefault();
+
+        let clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+
+        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        currentX = clientX - startX; currentY = clientY - startY;
+
+        cupEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+        if(Math.abs(currentX) > 100 || Math.abs(currentY) > 100) {
+
+            isDragging = false; cupEl.style.display = 'none';
+
+            if(document.getElementById('btn-force-open').style.display === 'block') forceOpen();
+
+        }
+
+    }
+
+    function dragEnd() { isDragging = false; }
+
+    function resetCup() { currentX = 0; currentY = 0; cupEl.style.transform = `translate(0px, 0px)`; }
+
+
+
+    cupEl.addEventListener('touchstart', dragStart, {passive: false}); cupEl.addEventListener('mousedown', dragStart);
+
+    document.addEventListener('touchmove', drag, {passive: false}); document.addEventListener('mousemove', drag);
+
+    document.addEventListener('touchend', dragEnd); document.addEventListener('mouseup', dragEnd);
+
+
+
+    // MỞ GAME
+
+    function openGame(g) {
+
+        clearInterval(gameInterval); currentGame = g; isRevealing = false; 
+
+        timer = (g==='crash' || g==='singularity') ? 10 : 30; clearBet(); totalBetPlaced = 0; resultCache = null;
+
+        document.getElementById('timer').style.display = 'block'; document.getElementById('timer').innerText = timer; 
+
+        document.getElementById('game-status').innerText = "> ĐANG CHỜ LỆNH ĐIỀU ĐỘNG...";
+
+        
+
+        ['plate-area','baccarat-table','radar-container','crash-container','singularity-container','chromeorb-container'].forEach(id => document.getElementById(id).style.display = 'none');
+
+        document.getElementById('btn-force-open').style.display = 'none'; document.getElementById('btn-cashout').style.display = 'none'; document.getElementById('btn-bet').style.display = 'block';
+
+        
+
+        const area = document.getElementById('bet-area'); area.style.display = 'grid';
+
+        area.className = (g === 'bc' || g === 'ba' || g === 'radar') ? 'bet-grid bc-grid' : 'bet-grid';
+
+        
+
+        if(g === 'tx') area.innerHTML = `<div class="side-btn" id="s-TAI" onclick="selectSide('TAI')"><h2 style="color:#ffcc00">TÀI (CAO)</h2></div><div class="side-btn" id="s-XIU" onclick="selectSide('XIU')"><h2 style="color:#fff">XỈU (THẤP)</h2></div>`;
+
+        else if(g === 'xd') area.innerHTML = `<div class="side-btn" id="s-CHAN" onclick="selectSide('CHAN')"><h2 style="color:#ffcc00">CHẴN</h2></div><div class="side-btn" id="s-LE" onclick="selectSide('LE')"><h2 style="color:#fff">LẺ</h2></div>`;
+
+        else if(g === 'ba') area.innerHTML = `<div class="side-btn" id="s-CON" onclick="selectSide('CON')"><b style="color:#00b0ff">QUÂN TA</b></div><div class="side-btn" id="s-HOA" onclick="selectSide('HOA')"><b style="color:#00e676">HÒA (x8)</b></div><div class="side-btn" id="s-CAI" onclick="selectSide('CAI')"><b style="color:#ff3333">ĐỊCH</b></div>`;
+
+        else if(g === 'bc') area.innerHTML = Object.keys(bcIcons).map(k => `<div class="side-btn" id="s-${k}" onclick="selectSide('${k}')" style="font-size:1.2rem">${bcIcons[k]}<br>${k}</div>`).join('');
+
+        else if(g === 'radar') area.innerHTML = Object.keys(radarTacs).map(k => `<div class="side-btn" id="s-${k}" onclick="selectSide('${k}')" style="font-size:1.1rem; color:var(--neon-green); font-family:'Share Tech Mono';">${radarTacs[k]}<br>${k}</div>`).join('');
+
+        else if(g === 'crash') { area.style.display = 'none'; sidePlaced = 'CRASH_BET'; }
+
+        else if(g === 'singularity') { area.style.display = 'none'; document.getElementById('sing-target').disabled = false; document.getElementById('sing-target').value = ''; document.getElementById('sing-core').innerText = 'CORE'; document.getElementById('sing-core').classList.remove('core-vibrating'); }
+
+        else if(g === 'chromeorb') {
+
+            area.className = 'bet-grid chrome-grid';
+
+            area.innerHTML = `<div class="side-btn chrome-btn" id="s-TAI" onclick="selectSide('TAI')"><b>TÀI</b></div><div class="side-btn chrome-btn" id="s-XIU" onclick="selectSide('XIU')"><b>XỈU</b></div><div class="side-btn chrome-btn" id="s-CHAN" onclick="selectSide('CHAN')"><b>CHẴN</b></div><div class="side-btn chrome-btn" id="s-LE" onclick="selectSide('LE')"><b>LẺ</b></div>`;
+
+        }
+
+
+
+        if(g === 'ba') document.getElementById('baccarat-table').style.display = 'flex';
+
+        else if(g === 'radar') document.getElementById('radar-container').style.display = 'block';
+
+        else if(g === 'crash') document.getElementById('crash-container').style.display = 'flex';
+
+        else if(g === 'singularity') document.getElementById('singularity-container').style.display = 'flex';
+
+        else if(g === 'chromeorb') {
+
+            document.getElementById('chromeorb-container').style.display = 'flex';
+
+            let mo = document.getElementById('chrome-main');
+
+            mo.classList.remove('splitting'); mo.style.transform = ''; mo.style.opacity = '1';
+
+            ['c-drop1','c-drop2','c-drop3'].forEach(id => document.getElementById(id).style.display = 'none');
+
+        }
+
+        else document.getElementById('plate-area').style.display = 'flex';
+
+
+
+        switchTab('game'); gameInterval = setInterval(gameLoop, 1000);
+
+    }
+
+
+
+    function gameLoop() { if(isRevealing) return; if(timer > 0) { timer--; document.getElementById('timer').innerText = timer; } else { startRevealing(); } }
+
+
+
+    let crashMultiplier = 1.00; let crashTarget = 1.00; let crashTimer = null; let hasCashedOut = false;
+
+    
+
+    function startRevealing() {
+
+        isRevealing = true; document.getElementById('timer').style.display = 'none';
+
+        let isSystemWin = (Math.random() * 100) <= ADMIN_WIN_RATE;
+
+
+
+        if(currentGame === 'crash') {
+
+            document.getElementById('game-status').innerText = "> TÊN LỬA RỜI BỆ PHÓNG!"; document.getElementById('btn-bet').style.display = 'none';
+
+            if(totalBetPlaced > 0) document.getElementById('btn-cashout').style.display = 'block';
+
+            crashMultiplier = 1.00; hasCashedOut = false;
+
+            if (totalBetPlaced > 0) { if (!isSystemWin) crashTarget = (Math.random() * 0.1) + 1.01; else crashTarget = (Math.random() * 5.0) + 3.0; } 
+
+            else { let r = Math.random(); if(r < 0.5) crashTarget = (Math.random() * 1.5) + 1.01; else if(r < 0.85) crashTarget = (Math.random() * 3.0) + 1.5; else crashTarget = (Math.random() * 10.0) + 3.0; }
+
+            document.getElementById('crash-mult').style.color = '#fff';
+
+            crashTimer = setInterval(() => {
+
+                crashMultiplier += 0.01 + (crashMultiplier * 0.005); document.getElementById('crash-mult').innerText = crashMultiplier.toFixed(2) + 'x';
+
+                if(crashMultiplier >= crashTarget) {
+
+                    clearInterval(crashTimer); document.getElementById('crash-mult').style.color = 'var(--danger)'; document.getElementById('crash-mult').innerText = "CRASHED @ " + crashMultiplier.toFixed(2) + "x";
+
+                    document.getElementById('btn-cashout').style.display = 'none'; document.getElementById('game-status').innerText = "> MẤT KẾT NỐI TÍN HIỆU!";
+
+                    if(!hasCashedOut && totalBetPlaced > 0) { addHistory('THIỆT HẠI', 0, 'Tên lửa phát nổ', 'Thất bại'); Swal.fire({title: "GÃY!", text: "Tên lửa nổ tung!", icon: "error", background: '#2a0000', color: '#ffcc00'}); }
+
+                    setTimeout(() => openGame('crash'), 4000);
+
+                }
+
+            }, 50);
+
+        } else if(currentGame === 'radar') {
+
+            document.getElementById('game-status').innerText = "> RADAR ĐANG QUÉT MỤC TIÊU..."; document.getElementById('btn-force-open').style.display = 'none'; 
+
+            let keys = Object.keys(radarTacs); let res, winCheck;
+
+            do { res = [keys[rand(6)-1], keys[rand(6)-1], keys[rand(6)-1]]; winCheck = res.includes(sidePlaced); } while (totalBetPlaced > 0 && ((isSystemWin && !winCheck) || (!isSystemWin && winCheck)));
+
+            resultCache = res; let dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+
+            dots.forEach(d => { d.style.display = 'block'; d.style.top = rand(80, 20)+'%'; d.style.left = rand(80, 20)+'%'; });
+
+            setTimeout(() => { forceOpenRadar(); }, 2500);
+
+        } else if(currentGame === 'singularity') {
+
+            document.getElementById('game-status').innerText = "> LÕI HƯ KHÔNG ĐANG DÒ TÌM KẾT NỐI...";
+
+            document.getElementById('sing-core').classList.add('core-vibrating'); let targetNum = parseFloat(sidePlaced) || 0; let resNum;
+
+            if(totalBetPlaced > 0 && isSystemWin) { resNum = targetNum > 500 ? (targetNum - 15 - Math.random()*10) : (targetNum + 15 + Math.random()*10); } else { resNum = (Math.random() * 999) + 1; }
+
+            resultCache = resNum.toFixed(2); setTimeout(() => { forceOpenSingularity(); }, 3000);
+
+        } else if(currentGame === 'chromeorb') {
+
+            document.getElementById('game-status').innerText = "> THỦY NGÂN ĐANG TÁCH RỜI..."; document.getElementById('btn-force-open').style.display = 'block'; document.getElementById('btn-force-open').innerText = "HOẶC NHẤN ĐỂ TÁCH NGAY";
+
+            let drops, tx, cl;
+
+            do { drops = [rand(6), rand(6), rand(6)]; let sum = drops[0] + drops[1] + drops[2]; tx = sum >= 11 ? 'TAI' : 'XIU'; cl = sum % 2 === 0 ? 'CHAN' : 'LE'; } while (totalBetPlaced > 0 && ((isSystemWin && tx !== sidePlaced && cl !== sidePlaced) || (!isSystemWin && (tx === sidePlaced || cl === sidePlaced))));
+
+            resultCache = { drops: drops, taiXiu: tx, chanLe: cl, sum: drops[0]+drops[1]+drops[2] };
+
+        } else {
+
+            document.getElementById('game-status').innerText = "> ĐANG TIẾP NHẬN THÔNG TIN...";
+
+            if(currentGame === 'ba') {
+
+                document.getElementById('btn-force-open').style.display = 'block'; document.getElementById('btn-force-open').innerText = "MỞ BÀI ĐỂ XÉT DUYỆT KẾT QUẢ";
+
+                let winner, pS, bS, pCards, bCards;
+
+                do { pCards = [rand(9,1), rand(9,1)]; bCards = [rand(9,1), rand(9,1)]; pS = (pCards[0] + pCards[1]) % 10; bS = (bCards[0] + bCards[1]) % 10;
+
+                    if(pS <= 5) { let c = rand(9,1); pCards.push(c); pS = (pS + c) % 10; }
+
+                    if(bS <= 5) { let c = rand(9,1); bCards.push(c); bS = (bS + c) % 10; }
+
+                    if (pS > bS) winner = 'CON'; else if (bS > pS) winner = 'CAI'; else winner = 'HOA';
+
+                } while (totalBetPlaced > 0 && ((isSystemWin && winner !== sidePlaced) || (!isSystemWin && winner === sidePlaced)));
+
+                resultCache = { winner: winner, pS: pS, bS: bS };
+
+                const renderCards = (cards, suitClass) => cards.map(c => `<div class="b-card" onclick="this.classList.add('flipped')"><div class="b-card-inner"><div class="b-card-face b-card-back"></div><div class="b-card-face b-card-front ${suitClass}">${c}</div></div></div>`).join('');
+
+                document.getElementById('ba-con-cards').innerHTML = renderCards(pCards, 'black-suit'); document.getElementById('ba-cai-cards').innerHTML = renderCards(bCards, 'red-suit');
+
+            } else {
+
+                document.getElementById('btn-force-open').style.display = 'block'; document.getElementById('btn-force-open').innerText = "HOẶC TỰ NẶN BÁT (KÉO BÁT)";
+
+                resetCup(); cupEl.style.display = 'block';
+
+                if(currentGame === 'tx') {
+
+                    let d, res; do { d = [rand(6), rand(6), rand(6)]; res = (d[0]+d[1]+d[2]) >= 11 ? 'TAI' : 'XIU'; } while (totalBetPlaced > 0 && ((isSystemWin && res !== sidePlaced) || (!isSystemWin && res === sidePlaced)));
+
+                    resultCache = res; document.getElementById('visual-res').innerHTML = d.map(v => `<div class="dice">${v}</div>`).join('');
+
+                } else if(currentGame === 'xd') {
+
+                    let s, res; do { s = [rand(2,0), rand(2,0), rand(2,0), rand(2,0)]; res = s.filter(x=>x===1).length%2===0 ? 'CHAN' : 'LE'; } while (totalBetPlaced > 0 && ((isSystemWin && res !== sidePlaced) || (!isSystemWin && res === sidePlaced)));
+
+                    resultCache = res; document.getElementById('visual-res').innerHTML = s.map(v => `<div style="width:25px;height:25px;border-radius:50%;background:${v?'#ffcc00':'#fff'}"></div>`).join('');
+
+                } else if(currentGame === 'bc') {
+
+                    let res, winCheck; do { res = [Object.keys(bcIcons)[rand(6)-1], Object.keys(bcIcons)[rand(6)-1], Object.keys(bcIcons)[rand(6)-1]]; winCheck = res.includes(sidePlaced); } while (totalBetPlaced > 0 && ((isSystemWin && !winCheck) || (!isSystemWin && winCheck)));
+
+                    resultCache = res; document.getElementById('visual-res').innerHTML = resultCache.map(k => `<span style="font-size:2.5rem">${bcIcons[k]}</span>`).join(' ');
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+    function cashOutCrash() {
+
+        if(hasCashedOut || crashMultiplier >= crashTarget) return;
+
+        hasCashedOut = true; document.getElementById('btn-cashout').style.display = 'none';
+
+        let winAmt = Math.floor(totalBetPlaced * crashMultiplier); balance += winAmt; updateUI();
+
+        addHistory('THOÁT HIỂM', winAmt, `Chốt lời x${crashMultiplier.toFixed(2)}`, 'Thành công');
+
+        Swal.fire({title: "RÚT QUÂN AN TOÀN!", text: `Chốt lời x${crashMultiplier.toFixed(2)}: +${winAmt.toLocaleString()}đ`, icon: "success", background: '#2a0000', color: '#ffcc00'});
+
+    }
+
+
+
+    function forceOpenSingularity() {
+
+        let core = document.getElementById('sing-core'); core.classList.remove('core-vibrating'); core.innerText = resultCache; core.style.color = 'var(--cyan-neon)';
+
+        if(totalBetPlaced > 0) {
+
+            let target = parseFloat(sidePlaced); let result = parseFloat(resultCache); let diff = Math.abs(target - result);
+
+            let multiplier = 0; let msg = `Bạn chọn: ${target}\nKết quả: ${resultCache}\nLệch: ${diff.toFixed(2)}`;
+
+            if(diff === 0) multiplier = 100; else if(diff <= 1.0) multiplier = 15; else if(diff <= 10.0) multiplier = 2.5;
+
+            if(multiplier > 0) { let profit = totalBetPlaced * multiplier; balance += profit; addHistory('THẮNG LỚN', profit, `Singularity x${multiplier}`, 'Hoàn tất'); Swal.fire({ title: "ĐỒNG BỘ THÀNH CÔNG!", text: msg + `\n+${profit.toLocaleString()}đ`, icon: "success", background: '#050505', color: 'var(--cyan-neon)' }); } 
+
+            else { addHistory('TRƯỢT TỌA ĐỘ', 0, 'Singularity chênh lệch', 'Thất bại'); Swal.fire({ title: "LỆCH PHA!", text: msg, icon: "error", background: '#050505', color: '#ff3333' }); }
+
+        }
+
+        updateUI(); setTimeout(() => openGame('singularity'), 4000);
+
+    }
+
+
+
+    function forceOpenRadar() {
+
+        let dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')]; dots.forEach(d => d.style.display = 'none'); 
+
+        let win = resultCache.includes(sidePlaced); let msg = "Tọa độ: " + resultCache.join(' - ');
+
+        if(totalBetPlaced > 0) {
+
+            if(win) { let profit = totalBetPlaced * 8; balance += profit; addHistory('THẮNG TRẬN', profit, 'Radar trúng mục tiêu', 'Hoàn tất'); Swal.fire({ title: "BẮT ĐÚNG SÓNG!", text: msg + `\n+${profit.toLocaleString()}đ`, icon: "success", background: '#2a0000', color: '#ffcc00' }); } 
+
+            else { addHistory('TRƯỢT MỤC TIÊU', 0, 'Radar trật mục tiêu', 'Thất bại'); Swal.fire("LỆCH SÓNG!", msg, "error"); }
+
+        }
+
+        updateUI(); setTimeout(() => openGame('radar'), 3500);
+
+    }
+
+
+
+    function forceOpen() {
+
+        cupEl.style.display = 'none'; document.getElementById('btn-force-open').style.display = 'none';
+
+        let win = false, profit = 0, msg = "";
+
+
+
+        if(currentGame === 'chromeorb') {
+
+            document.getElementById('chrome-main').classList.add('splitting');
+
+            setTimeout(() => {
+
+                let d1 = document.getElementById('c-drop1'); d1.innerText = resultCache.drops[0]; d1.style.display = 'flex';
+
+                let d2 = document.getElementById('c-drop2'); d2.innerText = resultCache.drops[1]; d2.style.display = 'flex';
+
+                let d3 = document.getElementById('c-drop3'); d3.innerText = resultCache.drops[2]; d3.style.display = 'flex';
+
+                
+
+                win = (sidePlaced === resultCache.taiXiu || sidePlaced === resultCache.chanLe); msg = `Tổng Thủy Ngân: ${resultCache.sum}\n(${resultCache.taiXiu} / ${resultCache.chanLe})`;
+
+                if(win) profit = totalBetPlaced * 2;
+
+                if(totalBetPlaced > 0) {
+
+                    if(win) { balance += profit; addHistory('TRÚNG ĐẬM', profit, 'Chrome Orb win', 'Hoàn tất'); Swal.fire({ title: "SANG CHẢNH!", text: msg + `\n+${profit.toLocaleString()}đ`, icon: "success", background: '#111', color: '#fff' }); } 
+
+                    else { addHistory('THẤT THU', 0, 'Chrome Orb trượt', 'Thất bại'); Swal.fire({ title: "TRƯỢT!", text: msg, icon: "error", background: '#111', color: '#fff' }); }
+
+                }
+
+                updateUI(); setTimeout(() => openGame('chromeorb'), 4000);
+
+            }, 600);
+
+            return;
+
+        }
+
+
+
+        if (currentGame === 'ba') {
+
+            document.querySelectorAll('.b-card').forEach(c => c.classList.add('flipped'));
+
+            document.getElementById('ba-con-score').innerText = resultCache.pS; document.getElementById('ba-con-score').style.display = 'block';
+
+            document.getElementById('ba-cai-score').innerText = resultCache.bS; document.getElementById('ba-cai-score').style.display = 'block';
+
+            win = (sidePlaced === resultCache.winner); msg = `Bên Thắng: ${resultCache.winner}`;
+
+            if(win) {
+
+                // CHUẨN XÁC: HÒA NHÂN 8, CÒN LẠI NHÂN 2
+
+                if(sidePlaced === 'HOA') profit = totalBetPlaced * 8; 
+
+                else profit = totalBetPlaced * 2;
+
+            }
+
+        } else {
+
+            win = Array.isArray(resultCache) ? resultCache.includes(sidePlaced) : (sidePlaced === resultCache); msg = `Kết quả: ${Array.isArray(resultCache) ? resultCache.join(', ') : resultCache}`;
+
+            if(win) profit = totalBetPlaced * 2;
+
+        }
+
+
+
+        if(totalBetPlaced > 0) {
+
+            if(win) { balance += profit; addHistory('ĐẠI THẮNG', profit, 'Chiến lược thành công', 'Hoàn tất'); Swal.fire({ title: "CHIẾN THẮNG!", text: `+${profit.toLocaleString()}đ`, icon: "success", background: '#2a0000', color: '#ffcc00' }); } 
+
+            else { addHistory('TỬ TRẬN', 0, 'Sai lệch chiến thuật', 'Thất bại'); Swal.fire("THẤT BẠI!", msg, "error"); }
+
+        }
+
+        updateUI(); setTimeout(() => openGame(currentGame), 3500); 
+
+    }
+
+
+
+    function selectSide(s) { if(isRevealing || totalBetPlaced > 0) return; selectedSide = s; document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); document.getElementById('s-'+s).classList.add('active'); }
+
+    function addBet(a) { if((!selectedSide && currentGame !== 'crash' && currentGame !== 'singularity') || isRevealing || totalBetPlaced > 0) return; currentBetAmt += a; if(currentBetAmt > balance) currentBetAmt = balance; document.getElementById('cur-bet-txt').innerText = currentBetAmt.toLocaleString() + 'đ'; }
+
+    function confirmBet() { 
+
+        if(currentBetAmt > 0 && totalBetPlaced === 0) { 
+
+            if(currentGame === 'singularity') {
+
+                let sVal = parseFloat(document.getElementById('sing-target').value);
+
+                if(isNaN(sVal) || sVal < 1.00 || sVal > 1000.00) { Swal.fire("LỖI", "Nhập số từ 1.00 đến 1000.00", "error"); return; }
+
+                sidePlaced = sVal; document.getElementById('sing-target').disabled = true;
+
+            } else if (currentGame === 'crash') { sidePlaced = 'CRASH_BET'; } else if (selectedSide) { sidePlaced = selectedSide; } else { return; }
+
+            balance -= currentBetAmt; totalBetPlaced = currentBetAmt; updateUI(); addHistory('TÁC CHIẾN', -currentBetAmt, `Phát lệnh: ${sidePlaced}`, 'Đã khóa'); document.getElementById('cur-bet-txt').innerText = "ĐÃ KHÓA LỆNH";
+
+        } 
+
+    }
+
+    function clearBet() { if(totalBetPlaced > 0) return; currentBetAmt = 0; document.getElementById('cur-bet-txt').innerText = "0"; document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); }
+
+    function rand(max, min=1) { return Math.floor(Math.random() * max) + min; }
+
+
+
+</script>
+
+</body>
+
+</html>
