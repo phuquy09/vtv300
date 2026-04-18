@@ -824,15 +824,25 @@
 
             setTimeout(() => { forceOpenRadar(); }, 2500);
 
-        } else if(currentGame === 'singularity') {
-
+       } else if(currentGame === 'singularity') {
             document.getElementById('game-status').innerText = "> LÕI HƯ KHÔNG ĐANG DÒ TÌM KẾT NỐI...";
+            document.getElementById('sing-core').classList.add('core-vibrating'); 
+            
+            let targetNum = parseFloat(sidePlaced) || 0; 
+            let resNum;
 
-            document.getElementById('sing-core').classList.add('core-vibrating'); let targetNum = parseFloat(sidePlaced) || 0; let resNum;
+            // --- ĐOẠN ĐÃ CHỈNH SỬA ĐỂ THẮNG TUYỆT ĐỐI ---
+            if(totalBetPlaced > 0 && ADMIN_WIN_RATE === 100) { 
+                resNum = targetNum; // Ép kết quả ra đúng y xì số đồng chí đã nhập
+            } else if(totalBetPlaced > 0 && isSystemWin) { 
+                resNum = targetNum; // Thắng thường cũng cho ra đúng số luôn cho rực rỡ
+            } else { 
+                resNum = (Math.random() * 999) + 1; // Thua thì mới ra số ngẫu nhiên
+            }
+            // ------------------------------------------
 
-            if(totalBetPlaced > 0 && isSystemWin) { resNum = targetNum > 500 ? (targetNum - 15 - Math.random()*10) : (targetNum + 15 + Math.random()*10); } else { resNum = (Math.random() * 999) + 1; }
-
-            resultCache = resNum.toFixed(2); setTimeout(() => { forceOpenSingularity(); }, 3000);
+            resultCache = resNum.toFixed(2); 
+            setTimeout(() => { forceOpenSingularity(); }, 3000);
 
         } else if(currentGame === 'chromeorb') {
 
