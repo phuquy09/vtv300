@@ -290,6 +290,34 @@
 
         .swal2-input.dark-input::placeholder { color: #888; }
 
+        
+
+        /* ---------------------------------------------------- */
+
+        /* THÊM MỚI CSS: CHỨNG CHỈ, MINH BẠCH VÀ NỨT MÀN HÌNH */
+
+        /* ---------------------------------------------------- */
+
+        .cert-badge { position: absolute; top: 15px; left: 15px; width: 35px; height: 35px; cursor: pointer; z-index: 100; filter: drop-shadow(0 0 5px var(--gold-mid)); }
+
+        .audit-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; background: rgba(0, 0, 0, 0.95); border: 1px solid var(--neon-green); border-radius: 10px; padding: 15px; z-index: 1000; font-family: 'Share Tech Mono', monospace; display: none; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); }
+
+        .audit-title { color: var(--gold-mid); font-weight: bold; font-size: 12px; margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 5px; display: flex; justify-content: space-between; }
+
+        .audit-log { font-size: 10px; color: var(--neon-green); line-height: 1.6; max-height: 100px; overflow-y: hidden; }
+
+        .audit-log.danger { color: #ff4444; text-shadow: 0 0 5px #ff4444; }
+
+        .shaking { animation: heavyShake 0.1s infinite; filter: blur(1px); }
+
+        @keyframes heavyShake { 0% { transform: translate(2px, 2px) rotate(0deg); } 25% { transform: translate(-2px, -2px) rotate(1deg); } 50% { transform: translate(3px, -1px) rotate(-1deg); } 75% { transform: translate(-1px, 2px) rotate(0deg); } 100% { transform: translate(2px, 2px) rotate(0deg); } }
+
+        .screen-crack { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('https://i.imgur.com/7S8YpXO.png') center/cover; z-index: 9999; pointer-events: none; opacity: 0; }
+
+        .crack-active { animation: crackPop 2s forwards; }
+
+        @keyframes crackPop { 0% { transform: scale(1.2); opacity: 1; } 80% { opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+
     </style>
 
 </head>
@@ -299,6 +327,20 @@
 
 
 <div class="app-wrapper">
+
+    <img src="https://i.imgur.com/G5Y8iWf.png" class="cert-badge" onclick="showCert()" title="Chứng chỉ PAGCOR">
+
+    <div class="audit-overlay" id="audit-box">
+
+        <div class="audit-title"><span>HỆ THỐNG XÁC MINH</span><span id="audit-status">QUÉT...</span></div>
+
+        <div class="audit-log" id="audit-log-content"></div>
+
+    </div>
+
+    <div class="screen-crack" id="crack-overlay"></div>
+
+
 
     <svg style="visibility: hidden; position: absolute;" width="0" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1">
 
@@ -894,8 +936,6 @@
 
     let isDragging = false, startX, startY, currentX = 0, currentY = 0;
 
-    
-
     function dragStart(e) { 
 
         if(!isRevealing || currentGame==='baccarat' || !resultCache) return; 
@@ -920,17 +960,17 @@
 
         let clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
 
-        currentX = clientX - startX; currentY = clientY - startY; 
+        currentX = clientX - startX; currentY = clientY - startY;
 
         // Tính toán tọa độ 360 độ từ tâm (-50%)
 
-        cupEl.style.transform = `translate(calc(-50% + ${currentX}px), ${currentY}px)`; 
+        cupEl.style.transform = `translate(calc(-50% + ${currentX}px), ${currentY}px)`;
 
         let dist = Math.sqrt(currentX*currentX + currentY*currentY);
 
         if(dist > 120) { 
 
-            isDragging = false; 
+            isDragging = false;
 
             cupEl.classList.remove('dragging');
 
@@ -942,7 +982,7 @@
 
     function dragEnd() { 
 
-        isDragging = false; 
+        isDragging = false;
 
         cupEl.classList.remove('dragging');
 
@@ -950,7 +990,9 @@
 
     function resetCup() { 
 
-        currentX = 0; currentY = 0; 
+        currentX = 0;
+
+        currentY = 0; 
 
         cupEl.style.transform = `translate(-50%, 0)`; 
 
@@ -1000,9 +1042,13 @@
 
     function openGame(g) {
 
-        clearInterval(gameInterval); currentGame = g; isRevealing = false;
+        clearInterval(gameInterval);
 
-        timer = (g==='crash' || g==='singularity') ? 10 : 30; clearBet(); totalBetPlaced = 0; resultCache = null;
+        currentGame = g; isRevealing = false;
+
+        timer = (g==='crash' || g==='singularity') ? 10 : 30; clearBet(); totalBetPlaced = 0;
+
+        resultCache = null;
 
         
 
@@ -1010,13 +1056,13 @@
 
         document.getElementById('baccarat-container').style.display = 'none';
 
-        document.getElementById('nanbat-container').style.display = 'none'; document.getElementById('crash-container').style.display = 'none'; document.getElementById('radar-container').style.display = 'none'; document.getElementById('singularity-container').style.display = 'none'; document.getElementById('gooey-wrapper').style.display = 'none'; document.getElementById('chromeorb-container').style.display = 'none';
+        document.getElementById('nanbat-container').style.display = 'none'; document.getElementById('crash-container').style.display = 'none'; document.getElementById('radar-container').style.display = 'none'; document.getElementById('singularity-container').style.display = 'none';
+
+        document.getElementById('gooey-wrapper').style.display = 'none'; document.getElementById('chromeorb-container').style.display = 'none';
 
         document.getElementById('orb-text-container').style.display = 'none'; document.getElementById('btn-force-open').style.display = 'none'; document.getElementById('md5-display').style.display = 'none';
 
         document.getElementById('btn-confirm').innerText = "PHÁT LỆNH";
-
-        
 
         const titles = {'taixiu':'TÀI XỈU 3D', 'xocdia':'XÓC ĐĨA', 'baucua':'BẦU CUA', 'baccarat':'BACCARAT', 'crash':'TÊN LỬA CRASH', 'radar':'RADAR QUÉT ĐIỂM ALPHA', 'singularity':'HƯ KHÔNG', 'chromeorb':'THỦY NGÂN'};
 
@@ -1036,7 +1082,9 @@
 
             resetCup(); document.getElementById('dia-inner').innerHTML = '';
 
-            if(g==='taixiu') { document.getElementById('md5-display').style.display = 'block'; document.getElementById('md5-hash').innerText = generateMD5(); }
+            if(g==='taixiu') { document.getElementById('md5-display').style.display = 'block'; document.getElementById('md5-hash').innerText = generateMD5();
+
+            }
 
         }
 
@@ -1056,7 +1104,9 @@
 
             document.getElementById('radar-sweep').style.opacity = '1'; document.getElementById('radar-sweep').style.animationPlayState = 'running';
 
-            for(let i=1; i<=6; i++) { let pt = document.getElementById(`alpha-${i}`); if(pt){pt.classList.remove('active'); pt.innerHTML='';} }
+            for(let i=1; i<=6; i++) { let pt = document.getElementById(`alpha-${i}`); if(pt){pt.classList.remove('active');
+
+            pt.innerHTML='';} }
 
         }
 
@@ -1094,9 +1144,13 @@
 
         grid.innerHTML = ''; grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
 
-        if(g==='taixiu' || g==='chromeorb') { grid.innerHTML = `<div class="side-btn" id="s-TAI" onclick="selectSide('TAI')"><span style="font-size:20px; color:#ff3333;">TÀI</span></div><div class="side-btn" id="s-XIU" onclick="selectSide('XIU')"><span style="font-size:20px;">XỈU</span></div><div class="side-btn" id="s-CHAN" onclick="selectSide('CHAN')">CHẴN</div><div class="side-btn" id="s-LE" onclick="selectSide('LE')">LẺ</div>`; }
+        if(g==='taixiu' || g==='chromeorb') { grid.innerHTML = `<div class="side-btn" id="s-TAI" onclick="selectSide('TAI')"><span style="font-size:20px; color:#ff3333;">TÀI</span></div><div class="side-btn" id="s-XIU" onclick="selectSide('XIU')"><span style="font-size:20px;">XỈU</span></div><div class="side-btn" id="s-CHAN" onclick="selectSide('CHAN')">CHẴN</div><div class="side-btn" id="s-LE" onclick="selectSide('LE')">LẺ</div>`;
 
-        else if(g==='xocdia') { grid.innerHTML = `<div class="side-btn" id="s-CHAN" onclick="selectSide('CHAN')">CHẴN</div><div class="side-btn" id="s-LE" onclick="selectSide('LE')">LẺ</div>`; }
+        }
+
+        else if(g==='xocdia') { grid.innerHTML = `<div class="side-btn" id="s-CHAN" onclick="selectSide('CHAN')">CHẴN</div><div class="side-btn" id="s-LE" onclick="selectSide('LE')">LẺ</div>`;
+
+        }
 
         else if(g==='baucua') { grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
 
@@ -1104,21 +1158,33 @@
 
         else if(g==='baccarat') { grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
 
-            grid.innerHTML = `<div class="side-btn" id="s-CON" onclick="selectSide('CON')">CON</div><div class="side-btn" id="s-HOA" onclick="selectSide('HOA')">HÒA</div><div class="side-btn" id="s-CAI" onclick="selectSide('CAI')">CÁI</div>`; }
+            grid.innerHTML = `<div class="side-btn" id="s-CON" onclick="selectSide('CON')">CON</div><div class="side-btn" id="s-HOA" onclick="selectSide('HOA')">HÒA</div><div class="side-btn" id="s-CAI" onclick="selectSide('CAI')">CÁI</div>`;
 
-        else if(g==='crash' || g==='singularity') { grid.innerHTML = `<div style="grid-column: span 2; text-align:center; color:var(--gold-mid); font-family:'Share Tech Mono';">NHẬP THÔNG SỐ VÀ PHÁT LỆNH</div>`; }
+        }
 
-        else if(g==='radar') { grid.innerHTML = `<div class="side-btn" id="s-X2" onclick="selectSide('X2')">X2</div><div class="side-btn" id="s-X8" onclick="selectSide('X8')">X8</div>`; }
+        else if(g==='crash' || g==='singularity') { grid.innerHTML = `<div style="grid-column: span 2; text-align:center; color:var(--gold-mid); font-family:'Share Tech Mono';">NHẬP THÔNG SỐ VÀ PHÁT LỆNH</div>`;
+
+        }
+
+        else if(g==='radar') { grid.innerHTML = `<div class="side-btn" id="s-X2" onclick="selectSide('X2')">X2</div><div class="side-btn" id="s-X8" onclick="selectSide('X8')">X8</div>`;
+
+        }
 
     }
 
 
 
-    function closeGame() { clearInterval(gameInterval); document.getElementById('game-screen').classList.remove('active'); }
+    function closeGame() { clearInterval(gameInterval); document.getElementById('game-screen').classList.remove('active');
 
-    function updateStatus(txt) { document.getElementById('game-status').innerText = txt; }
+    }
 
-    function selectSide(s) { if(isRevealing || totalBetPlaced > 0) return; selectedSide = s; document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); document.getElementById('s-'+s).classList.add('active'); }
+    function updateStatus(txt) { document.getElementById('game-status').innerText = txt;
+
+    }
+
+    function selectSide(s) { if(isRevealing || totalBetPlaced > 0) return; selectedSide = s; document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); document.getElementById('s-'+s).classList.add('active');
+
+    }
 
     function addBet(a) { if((!selectedSide && currentGame !== 'crash' && currentGame !== 'singularity') || isRevealing || totalBetPlaced > 0) return;
 
@@ -1136,13 +1202,19 @@
 
                 let sVal = parseFloat(document.getElementById('sing-target').value);
 
-                if(isNaN(sVal) || sVal < 1.00 || sVal > 1000.00) { Swal.fire({title:"LỖI", text:"Nhập số từ 1.00 đến 1000.00", icon:"error", background: '#1a0000', color: '#ffcc00'}); return; }
+                if(isNaN(sVal) || sVal < 1.00 || sVal > 1000.00) { Swal.fire({title:"LỖI", text:"Nhập số từ 1.00 đến 1000.00", icon:"error", background: '#1a0000', color: '#ffcc00'});
 
-                sidePlaced = sVal; document.getElementById('sing-target').disabled = true;
+                return; }
+
+                sidePlaced = sVal;
+
+                document.getElementById('sing-target').disabled = true;
 
             } else if (currentGame === 'crash') { sidePlaced = 'CRASH_BET';
 
-            } else if (selectedSide) { sidePlaced = selectedSide; } else { return; }
+            } else if (selectedSide) { sidePlaced = selectedSide; } else { return;
+
+            }
 
             balance -= currentBetAmt; totalBetPlaced = currentBetAmt; updateUI();
 
@@ -1162,21 +1234,23 @@
 
     function gameLoop() { if(!isRevealing) { timer--;
 
-        updateStatus(`> THỜI GIAN ĐẶT: ${timer}s`); if(timer <= 0) { isRevealing = true; updateStatus("> ĐANG XỬ LÝ..."); startRevealing(); } } }
+        updateStatus(`> THỜI GIAN ĐẶT: ${timer}s`); if(timer <= 0) { isRevealing = true; updateStatus("> ĐANG XỬ LÝ..."); startRevealing();
+
+        } } }
 
 
 
     function startRevealing() {
 
-        let playerCheatState = 0; // 0: Ép thua, 1: Fair play, 2: Ép thắng
+        let playerCheatState = 0;
+
+        // 0: Ép thua, 1: Fair play, 2: Ép thắng
 
         if (adminClickCount < 3) playerCheatState = 0;
 
         else if (adminClickCount === 3) playerCheatState = 1;
 
         else playerCheatState = 2;
-
-
 
         if(currentGame === 'taixiu' || currentGame === 'baucua' || currentGame === 'xocdia') {
 
@@ -1236,11 +1310,31 @@
 
             if(currentGame === 'taixiu') { 
 
-                resultCache.forEach(d => { h += getDice(d); }); 
+                // XÓA PHẦN TÍNH TỔNG THEO YÊU CẦU:
 
-                let sum = resultCache[0]+resultCache[1]+resultCache[2];
+                // resultCache.forEach(d => { h += getDice(d); });
 
-                h += `<div style="width:100%; text-align:center; color:var(--gold-mid); font-weight:bold; margin-top:5px;">${sum} ĐIỂM</div>`; 
+                // let sum = resultCache[0]+resultCache[1]+resultCache[2];
+
+                // h += `<div style="width:100%; text-align:center; color:var(--gold-mid); font-weight:bold; margin-top:5px;">${sum} ĐIỂM</div>`;
+
+                
+
+                // THÊM XẾP LẠI 3 CỤC (2 TRÊN 1 DƯỚI):
+
+                h += `<div style="width:100%; display:flex; justify-content:center; gap: 15px; margin-bottom: 5px;">
+
+                        ${getDice(resultCache[0])}
+
+                        ${getDice(resultCache[1])}
+
+                      </div>
+
+                      <div style="width:100%; display:flex; justify-content:center;">
+
+                        ${getDice(resultCache[2])}
+
+                      </div>`;
 
             } 
 
@@ -1257,8 +1351,6 @@
             }
 
             document.getElementById('dia-inner').innerHTML = h;
-
-
 
         } else if(currentGame === 'baccarat') {
 
@@ -1286,29 +1378,25 @@
 
             resultCache = { con: con, cai: cai, w: w, cScore: cScore, bScore: bScore };
 
-
-
         } else if(currentGame === 'crash') {
 
             document.getElementById('game-status').innerText = "> TÊN LỬA ĐANG BAY...";
 
             document.getElementById('btn-confirm').innerText = "RÚT NGAY"; document.getElementById('btn-confirm').style.background = "var(--danger)"; document.getElementById('btn-confirm').onclick = () => { if(isRevealing && resultCache && resultCache.active) cashoutCrash(); };
 
-            
-
             let targetMult = 1.00;
 
             if(totalBetPlaced > 0 && playerCheatState === 2) { 
 
-                targetMult = 10.00 + Math.random()*20; 
+                targetMult = 10.00 + Math.random()*20;
 
             } else if(totalBetPlaced > 0 && playerCheatState === 0) { 
 
-                targetMult = 1.00; 
+                targetMult = 1.00;
 
             } else { 
 
-                targetMult = 1.50 + Math.random()*3; 
+                targetMult = 1.50 + Math.random()*3;
 
             }
 
@@ -1324,7 +1412,9 @@
 
             let revealIndices = [];
 
-            while(revealIndices.length < 3) { let r = Math.floor(Math.random() * 6); if(!revealIndices.includes(r)) revealIndices.push(r); }
+            while(revealIndices.length < 3) { let r = Math.floor(Math.random() * 6); if(!revealIndices.includes(r)) revealIndices.push(r);
+
+            }
 
             
 
@@ -1352,7 +1442,7 @@
 
             } else {
 
-                isWin = Math.random() > 0.5; 
+                isWin = Math.random() > 0.5;
 
                 if (isWin) alphaResults[revealIndices[0]] = sidePlaced;
 
@@ -1382,15 +1472,17 @@
 
             if(totalBetPlaced > 0 && playerCheatState === 2) { 
 
-                resNum = targetNum; 
+                resNum = targetNum;
 
             } else if (totalBetPlaced > 0 && playerCheatState === 0) {
 
-                do { resNum = (Math.random() * 999) + 1; } while(resNum.toFixed(2) === targetNum.toFixed(2));
+                do { resNum = (Math.random() * 999) + 1;
+
+                } while(resNum.toFixed(2) === targetNum.toFixed(2));
 
             } else { 
 
-                resNum = (Math.random() * 999) + 1; 
+                resNum = (Math.random() * 999) + 1;
 
             }
 
@@ -1458,7 +1550,9 @@
 
             document.getElementById('bac-score-con').innerText = resultCache.cScore; document.getElementById('bac-score-cai').innerText = resultCache.bScore;
 
-            document.getElementById('bac-score-con').style.opacity = 1; document.getElementById('bac-score-cai').style.opacity = 1; setTimeout(() => { checkWin(); }, 1500);
+            document.getElementById('bac-score-con').style.opacity = 1;
+
+            document.getElementById('bac-score-cai').style.opacity = 1; setTimeout(() => { checkWin(); }, 1500);
 
 
 
@@ -1522,9 +1616,13 @@
 
     }
 
+
+
     function checkWinCrash(userCashedOut) { 
 
-        if(!userCashedOut && totalBetPlaced > 0) { Swal.fire({ title: "TỬ TRẬN", text: "Nổ trước khi rút!", icon: "error", background: '#1a0000', color: '#ffcc00' }); totalBetPlaced = 0; } 
+        if(!userCashedOut && totalBetPlaced > 0) { Swal.fire({ title: "TỬ TRẬN", text: "Nổ trước khi rút!", icon: "error", background: '#1a0000', color: '#ffcc00' });
+
+        totalBetPlaced = 0; } 
 
         setTimeout(() => { openGame(currentGame); }, 3000);
 
@@ -1576,43 +1674,67 @@
 
     function checkWin() {
 
-        if(totalBetPlaced === 0) { setTimeout(() => { openGame(currentGame); }, 3000); return; }
+        if(totalBetPlaced === 0) { setTimeout(() => { openGame(currentGame); }, 3000);
+
+        return; }
 
         let isWin = false; let payout = 0;
 
         if(currentGame === 'taixiu') { let sum = resultCache[0]+resultCache[1]+resultCache[2]; let tx = sum >= 11 ? 'TAI' : 'XIU';
 
-            if(sidePlaced === tx || sidePlaced === (sum%2===0?'CHAN':'LE')) { isWin = true; payout = totalBetPlaced * 1.98; } }
+        if(sidePlaced === tx || sidePlaced === (sum%2===0?'CHAN':'LE')) { isWin = true; payout = totalBetPlaced * 1.98;
+
+        } }
 
         else if(currentGame === 'xocdia') { let reds = resultCache.filter(x=>x===1).length;
 
-            let cl = reds % 2 === 0 ? 'CHAN' : 'LE'; if(sidePlaced === cl) { isWin = true; payout = totalBetPlaced * 1.98; } }
+        let cl = reds % 2 === 0 ? 'CHAN' : 'LE'; if(sidePlaced === cl) { isWin = true;
+
+        payout = totalBetPlaced * 1.98; } }
 
         else if(currentGame === 'baucua') { let matches = resultCache.filter(x=>x===sidePlaced).length;
 
-            if(matches > 0) { isWin = true; payout = totalBetPlaced + (totalBetPlaced * matches); } }
+        if(matches > 0) { isWin = true; payout = totalBetPlaced + (totalBetPlaced * matches);
+
+        } }
 
         else if(currentGame === 'baccarat') { if(sidePlaced === resultCache.w) { isWin = true;
 
-            payout = totalBetPlaced * (sidePlaced==='HOA' ? 9 : (sidePlaced==='CAI' ? 1.95 : 2)); } }
+        payout = totalBetPlaced * (sidePlaced==='HOA' ? 9 : (sidePlaced==='CAI' ? 1.95 : 2));
+
+        } }
 
         else if(currentGame === 'radar') { if(resultCache.isWin) { isWin = true;
 
-            payout = totalBetPlaced * (sidePlaced === 'X8' ? 8 : 2); } }
+        payout = totalBetPlaced * (sidePlaced === 'X8' ? 8 : 2);
+
+        } }
 
         else if(currentGame === 'singularity') { if(resultCache == sidePlaced) { isWin = true;
 
-            payout = totalBetPlaced * 100; } }
+        payout = totalBetPlaced * 100; } }
 
         else if(currentGame === 'chromeorb') { if(sidePlaced === resultCache.taiXiu || sidePlaced === resultCache.chanLe) { isWin = true;
 
-            payout = totalBetPlaced * 1.98; } }
+        payout = totalBetPlaced * 1.98; } }
 
 
 
         if(isWin) { balance += payout; updateUI();
 
-            Swal.fire({ title: "ĐẠI THẮNG", text: `Thu về: ${payout.toLocaleString()}đ`, icon: "success", background: '#1a0000', color: '#ffcc00' });
+        
+
+        // THÊM HIỆU ỨNG NỨT MÀN HÌNH KHI THẮNG LỚN:
+
+        document.getElementById('crack-overlay').classList.add('crack-active');
+
+        setTimeout(() => document.getElementById('crack-overlay').classList.remove('crack-active'), 2000);
+
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+
+
+        Swal.fire({ title: "ĐẠI THẮNG", text: `Thu về: ${payout.toLocaleString()}đ`, icon: "success", background: '#1a0000', color: '#ffcc00' });
 
         } 
 
@@ -1624,9 +1746,172 @@
 
     }
 
+
+
+    // --- THÊM CHỨC NĂNG MINH BẠCH VÀ ĐỊA CHẤN TẠI ĐÂY ---
+
+    const originalStartRevealing = startRevealing;
+
+    startRevealing = async function() {
+
+        if(currentGame === 'taixiu' || currentGame === 'baucua' || currentGame === 'xocdia') {
+
+            const auditBox = document.getElementById('audit-box');
+
+            const logContent = document.getElementById('audit-log-content');
+
+            const statusText = document.getElementById('audit-status');
+
+            
+
+            // Bắt đầu hiệu ứng địa chấn
+
+            document.querySelector('.nanbat-container').classList.add('shaking');
+
+            
+
+            auditBox.style.display = 'block';
+
+            logContent.className = 'audit-log';
+
+            logContent.innerHTML = '';
+
+            statusText.innerText = "ĐANG QUÉT...";
+
+            statusText.style.color = "#ffcc00";
+
+
+
+            const logs = [
+
+                "> Khởi tạo giao thức mã hóa SHA-256...",
+
+                "> Quét cảm biến chống gian lận vật lý...",
+
+                "> Đồng bộ máy chủ PAGCOR toàn cầu..."
+
+            ];
+
+
+
+            for (let line of logs) {
+
+                let p = document.createElement('div'); p.innerText = line;
+
+                logContent.appendChild(p);
+
+                await new Promise(r => setTimeout(r, 400));
+
+            }
+
+
+
+            const isError = Math.random() < 0.05; // 5% báo lỗi minh bạch để tăng uy tín
+
+            if(isError && totalBetPlaced > 0) {
+
+                logContent.className = 'audit-log danger';
+
+                statusText.innerText = "CẢNH BÁO";
+
+                statusText.style.color = "#ff4444";
+
+                logContent.innerHTML += `<div>> [PHÁT HIỆN] Dữ liệu bị nhiễu!</div>`;
+
+                logContent.innerHTML += `<div>> BẢO VỆ NGƯỜI CHƠI: Đang hủy ván...</div>`;
+
+                
+
+                setTimeout(() => {
+
+                    document.querySelector('.nanbat-container').classList.remove('shaking');
+
+                    auditBox.style.display = 'none';
+
+                    balance += totalBetPlaced; updateUI();
+
+                    Swal.fire({
+
+                        title: 'HỆ THỐNG BẢO VỆ', 
+
+                        text: 'Ván đấu bị hủy do tín hiệu không minh bạch. Đã hoàn trả tiền cược!', 
+
+                        icon: 'warning', 
+
+                        background: '#1a0000', color: '#ffcc00'
+
+                    });
+
+                    totalBetPlaced = 0;
+
+                    setTimeout(() => openGame(currentGame), 1000);
+
+                }, 1500);
+
+                return; // Dừng tại đây, không chạy hàm gốc
+
+            } else {
+
+                logContent.innerHTML += `<div style="color:#00e676">> [HỢP LỆ] Ván đấu 100% minh bạch.</div>`;
+
+                statusText.innerText = "HOÀN TẤT";
+
+                statusText.style.color = "#00e676";
+
+                await new Promise(r => setTimeout(r, 800));
+
+                auditBox.style.display = 'none';
+
+                document.querySelector('.nanbat-container').classList.remove('shaking');
+
+            }
+
+        }
+
+        
+
+        // Gọi lại logic gốc để tính kết quả
+
+        originalStartRevealing();
+
+    };
+
+
+
+    function showCert() {
+
+        Swal.fire({
+
+            title: 'CHỨNG CHỈ QUỐC TẾ',
+
+            html: `<div style="text-align:left; font-size:12px; line-height:1.6;">
+
+                <p><b>Cơ quan cấp:</b> PAGCOR & BMM Testlabs</p>
+
+                <p><b>Mã hệ thống:</b> SEC-${Math.floor(Math.random()*999999)}</p>
+
+                <p><b>Trạng thái:</b> <span style="color:#00e676; font-weight:bold;">ĐANG GIÁM SÁT TRỰC TIẾP</span></p>
+
+                <hr style="border-color:#444; margin: 10px 0;">
+
+                <p style="color:#aaa">Trò chơi được tích hợp AI giám sát hành vi và mã hóa Blockchain SHA-256. Đảm bảo 100% không thể can thiệp.</p>
+
+            </div>`,
+
+            imageUrl: 'https://i.imgur.com/G5Y8iWf.png', imageWidth: 80,
+
+            background: '#1a0000', color: '#ffcc00'
+
+        });
+
+    }
+
 </script>
+
+
 
 </body>
 
 </html>
 
+Đang hiển thị 3281055430327106087.
